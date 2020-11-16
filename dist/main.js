@@ -336,7 +336,7 @@ function mapRowDataToPairData(row) {
     email: row[PAIRING_COLUMNS_MAP.EMAIL],
     name: row[PAIRING_COLUMNS_MAP.NAME],
     snooze: row[PAIRING_COLUMNS_MAP.SNOOZE] || '',
-    timezone: row[PAIRING_COLUMNS_MAP.TIMEZONE] || 'UNKNOWN',
+    timezone: row[PAIRING_COLUMNS_MAP.TIMEZONE] || 'GMT',
     topics: row[PAIRING_COLUMNS_MAP.TOPICS] || '',
   };
 }
@@ -405,8 +405,8 @@ function wellThen() {
   return [
     "Don't tell that to coffeebot :( Just keep it to yourself okay?",
     "Don't let coffeebot tell you how to lead your life, you just follow your heart, okay?",
-    "Me either. Just drink some other liquid!",
-    "Don't worry, no one can tell what you're drinking over hangouts!"
+    "Me neither. Just drink some other liquid!",
+    "Don't worry, no one can tell what you're drinking over WebEx!"
   ];
 }
 
@@ -455,6 +455,10 @@ ${joke()[Math.floor(Math.random()*joke().length)]}
 
 Happy chatting!
 Coffeebot ☕🤖
+
+---
+You can find the signup sheet at https://docs.google.com/spreadsheets/d/1qQYqf2SE8mGDcJW0tGJPxKdu3OhNnfpJEUlIDf7p7hs/edit?usp=sharing
+Wiki page at https://enwiki.cisco.com/EverythingSocial/Coffeebot
 `;
 }
 
@@ -513,7 +517,7 @@ function coffeePairingActivate(pairingData, matchups) {
 
   recordPairing(allEmails);
 
-  MailApp.sendEmail(allEmails, subject, message, { name: 'Coffeebot' });
+  MailApp.sendEmail(allEmails, subject, message, { name: 'Ensoft Coffeebot' });
 }
 
 /**
