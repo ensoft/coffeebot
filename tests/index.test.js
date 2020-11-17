@@ -6,6 +6,7 @@ const {
   serializeEmails,
   shouldSnooze,
   uniqify,
+  generateEmail,
 } = require('../src/coffeebot');
 
 describe('Coffeebot', () => {
@@ -75,7 +76,7 @@ describe('Coffeebot', () => {
         email: undefined,
         name: undefined,
         snooze: '',
-        timezone: 'UNKNOWN',
+        timezone: 'GMT',
         topics: '',
       });
     });
@@ -177,6 +178,29 @@ describe('Coffeebot', () => {
     it('should snooze if snoozed through to next year', () => {
       const snooze = `${today.getFullYear() + 1}/${today.getMonth()}/${today.getDate()}`;//`2021/06/01`;
       expect(shouldSnooze(today, snooze)).toEqual(true);
+    });
+  });
+
+  describe('generateEmail', () => {
+    
+    it('should not include timezone info if allTimezones = "GMT"', () => {
+      expect(generateEmail('namestring', 'GMT', 'topics')).not.toMatch(
+        "When scheduling a time to chat, please mind everyone's timezones");
+    });
+
+    it('should include timezone info if allTimezones != "GMT"', () => {
+      expect(generateEmail('namestring', 'GMT, PDT', 'topics')).toMatch(
+        "When scheduling a time to chat, please mind everyone's timezones, which are: GMT, PDT");
+    });
+
+    it('should not include topics if there are no topics!', () => {
+      expect(generateEmail('namestring', 'GMT', '')).not.toMatch(
+        "What should you talk about? Well that's up to you, but maybe you could talk about");
+    });
+
+    it('should include topics if there are topics', () => {
+      expect(generateEmail('namestring', 'GMT', 'topic1, topic2')).toMatch(
+        "What should you talk about? Well that's up to you, but maybe you could talk about: topic1, topic2");
     });
   });
 });

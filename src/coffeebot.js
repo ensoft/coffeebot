@@ -4,6 +4,7 @@ const RECORD_SHEET_NAME = 'Past Pairings';
 const RECORD_SHEET_HEADINGS = ['Pairing Date', 'Paired Emails']
 const MAX_PAIRING_TRIES = 20;
 const EMAIL_SEPARATOR = ',';
+const DEFAULT_TIMEZONE = "GMT";
 
 const PAIRING_COLUMNS_MAP = {
   NAME: 0,
@@ -240,7 +241,7 @@ function mapRowDataToPairData(row) {
     email: row[PAIRING_COLUMNS_MAP.EMAIL],
     name: row[PAIRING_COLUMNS_MAP.NAME],
     snooze: row[PAIRING_COLUMNS_MAP.SNOOZE] || '',
-    timezone: row[PAIRING_COLUMNS_MAP.TIMEZONE] || 'GMT',
+    timezone: row[PAIRING_COLUMNS_MAP.TIMEZONE] || DEFAULT_TIMEZONE,
     topics: row[PAIRING_COLUMNS_MAP.TOPICS] || '',
   };
 }
@@ -343,17 +344,30 @@ function recordPairing(emails) {
  * @returns {string} email message
  */
 function generateEmail(allNames, allTimezones, allTopics) {
+
+  // Only mention time zones if it's not just DEFAULT_TIMEZONE for everyone
+  var timezoneString = "";
+  if (allTimezones != DEFAULT_TIMEZONE) {
+    timezoneString = `
+When scheduling a time to chat, please mind everyone's timezones, which are: ${allTimezones}
+`
+  };
+
+  // Only mention topics if there are any
+  var allTopicsString = "";
+  if (allTopics) {
+    allTopicsString = `
+What should you talk about? Well that's up to you, but maybe you could talk about: ${allTopics}
+`
+  };
+
   return `
 Hey ${allNames}!
 
 You're invited to chat over coffee this week!  
 
 Don't like coffee? ${wellThen()[Math.floor(Math.random()*wellThen().length)]}
-
-When scheduling a time to chat, please mind everyone's timezones, which are: ${allTimezones}
-
-What should you talk about? Well that's up to you, but maybe you could talk about: ${allTopics}
-
+${timezoneString}${allTopicsString}
 P.S.
 ${joke()[Math.floor(Math.random()*joke().length)]}
 
@@ -461,6 +475,7 @@ module.exports = {
   deserializeEmails,
   generateInitialSignupSheet,
   generateNextPairings,
+  generateEmail,
   getToday,
   mapRowDataToPairData,
   randomUniquePairing,
