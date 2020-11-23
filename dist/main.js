@@ -521,8 +521,8 @@ function coffeePairingActivate(pairingData, matchups) {
       topics: acc.topics.concat(participant.topics.split(/\s*,\s*/)),
     };
   }, { names: [], timezones: [], emails: [], topics: [] });
-    
-  const allTopics = uniqify(emailData.topics).join(', ');
+
+  const allTopics = uniqify(emailData.topics).filter(Boolean).join(', ');
   const allNames = emailData.names.join(' & ');
   const allTimezones = uniqify(emailData.timezones).join(', ');
   const allEmails = serializeEmails(emailData.emails);
